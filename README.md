@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/nnutter/mojo-pgx-cursor.svg?branch=master)](https://travis-ci.org/nnutter/mojo-pgx-cursor)
 # NAME
 
 Mojo::PgX::Cursor - Cursor Extension for Mojo::Pg
