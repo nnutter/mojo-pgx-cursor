@@ -21,12 +21,69 @@ $db->query('insert into cursor_test (name) values (?)', $_) for qw(foo bar);
 {
   my $cursor = Mojo::PgX::Cursor::Cursor->new(
     query => 'select name from cursor_test',
+  );
+  is $cursor, undef, 'missing db returns empty';
+}
+
+{
+  my $cursor = Mojo::PgX::Cursor::Cursor->new(
     db => $db,
+  );
+  is $cursor, undef, 'no query returns empty';
+}
+
+{
+  my $cursor = Mojo::PgX::Cursor::Cursor->new(
+    db => $db,
+    query => '',
+  );
+  is $cursor, undef, 'empty query returns empty';
+}
+
+{
+  my $cursor = Mojo::PgX::Cursor::Cursor->new(
+    db => $db,
+    name => 'my_cursor',
+    query => 'select name from cursor_test',
+  );
+  is $cursor->name, 'my_cursor', 'name can be specified';
+}
+
+{
+  my $cursor = Mojo::PgX::Cursor::Cursor->new(
+    db => $db,
+    name => 'my_cursor',
+    query => 'select name from cursor_test',
+  );
+  my $results = $cursor->fetch;
+  ok $results->rows, 'fetched some';
+}
+
+{
+  my $closed;
+  no warnings 'redefine';
+  local *Mojo::PgX::Cursor::Cursor::close = sub { $closed++};
+  {
+    my $cursor = Mojo::PgX::Cursor::Cursor->new(
+      db => $pg->db,
+      name => 'my_cursor',
+      query => 'select name from cursor_test',
+    );
+    $cursor->db->disconnect;
+  }
+  ok !$closed, 'close was not called when db was disconnected';
+}
+
+{
+  my $cursor = Mojo::PgX::Cursor::Cursor->new(
+    db => $db,
+    query => 'select name from cursor_test',
   );
   my $results = $cursor->fetch(3);
   is $results->rows, 2, 'got 2 rows even though we tried to fetch 3';
   is_deeply $results->arrays->flatten->sort->to_array, [sort qw(foo bar)], 'got both names';
-  $cursor->close;
+  ok $cursor->close, 'closed cursor';
+  ok !$cursor->close, 'second call to close fails';
   my $name = $cursor->name;
   eval { $db->query(qq(fetch all from "$name")) };
   like $@, qr/$name/, 'fetch from closed cursor failed';
@@ -36,8 +93,8 @@ $db->query('insert into cursor_test (name) values (?)', $_) for qw(foo bar);
   my $name;
   {
     my $cursor = Mojo::PgX::Cursor::Cursor->new(
-      query => 'select name from cursor_test',
       db => $db,
+      query => 'select name from cursor_test',
     );
     $name = $cursor->name;
   }
