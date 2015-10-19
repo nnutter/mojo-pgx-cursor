@@ -10,8 +10,7 @@ our $VERSION = "0.01";
 
 sub import {
     my $class = shift;
-    return unless @_;
-    if ($_[0] eq 'monkey_patch') {
+    if (defined $_[0] and $_[0] eq 'monkey_patch') {
         monkey_patch 'Mojo::Pg', 'cursor', \&cursor;
     }
 }
