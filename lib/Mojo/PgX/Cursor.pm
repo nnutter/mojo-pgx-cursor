@@ -35,7 +35,16 @@ Mojo::PgX::Cursor - Cursor Extension for Mojo::Pg
 
 =head1 SYNOPSIS
 
-    use Mojo::PgX::Cursor;
+    require Mojo::PgX::Cursor;
+    my $pg = Mojo::PgX::Cursor->new(...);
+    my $results = $pg->cursor('select * from some_table');
+
+    use Mojo::PgX::Cursor 'monkey_patch';
+    my $pg = Mojo::Pg->new(...);
+    my $results = $pg->cursor('select * from some_table');
+    while (my $row = $results->hash) {
+      ...
+    }
 
 =head1 DESCRIPTION
 
@@ -58,6 +67,37 @@ with that comes a few complications:
 =item Cursors are a resource that should be managed.
 
 =item Cursors require a double loop to iterate through all rows.
+
+=back
+
+=head1 METHODS
+
+=head2 cursor
+
+    my $results = $db->cursor('select * from foo');
+
+Execute a blocking statement and return an L<Mojo::PgX::Cursor::Results> object
+to iterate over the results.  Unlike L<Mojo::Pg::Results> results are fetched
+in batches rather than all at once but this is handled automatically by the
+L<Mojo::PgX::Cursor::Results> object.  Be aware that this makes the object
+behave somewhat differently.
+
+L<Mojo::PgX::Cursor::Results> does not support C<hashes> or C<arrays> since if
+you wish to use those you should just use C<query> instead.  C<rows> returns
+the number of rows in the batch not the total rows for the query.
+
+L<Mojo::PgX::Cursor::Results> should behave like L<Mojo::Pg::Results> for
+C<array>, C<columns>, C<hash>, and C<expand>.
+
+=head1 COMING SOON
+
+=over
+
+=item Better documentation.
+
+=item Support for bind params.
+
+=item Support for non-blocking statements.
 
 =back
 

@@ -5,7 +5,16 @@ Mojo::PgX::Cursor - Cursor Extension for Mojo::Pg
 
 # SYNOPSIS
 
-    use Mojo::PgX::Cursor;
+    require Mojo::PgX::Cursor;
+    my $pg = Mojo::PgX::Cursor->new(...);
+    my $results = $pg->cursor('select * from some_table');
+
+    use Mojo::PgX::Cursor 'monkey_patch';
+    my $pg = Mojo::Pg->new(...);
+    my $results = $pg->cursor('select * from some_table');
+    while (my $row = $results->hash) {
+      ...
+    }
 
 # DESCRIPTION
 
@@ -24,6 +33,31 @@ with that comes a few complications:
 - Cursors must be named.
 - Cursors are a resource that should be managed.
 - Cursors require a double loop to iterate through all rows.
+
+# METHODS
+
+## cursor
+
+    my $results = $db->cursor('select * from foo');
+
+Execute a blocking statement and return an [Mojo::PgX::Cursor::Results](https://metacpan.org/pod/Mojo::PgX::Cursor::Results) object
+to iterate over the results.  Unlike [Mojo::Pg::Results](https://metacpan.org/pod/Mojo::Pg::Results) results are fetched
+in batches rather than all at once but this is handled automatically by the
+[Mojo::PgX::Cursor::Results](https://metacpan.org/pod/Mojo::PgX::Cursor::Results) object.  Be aware that this makes the object
+behave somewhat differently.
+
+[Mojo::PgX::Cursor::Results](https://metacpan.org/pod/Mojo::PgX::Cursor::Results) does not support `hashes` or `arrays` since if
+you wish to use those you should just use `query` instead.  `rows` returns
+the number of rows in the batch not the total rows for the query.
+
+[Mojo::PgX::Cursor::Results](https://metacpan.org/pod/Mojo::PgX::Cursor::Results) should behave like [Mojo::Pg::Results](https://metacpan.org/pod/Mojo::Pg::Results) for
+`array`, `columns`, `hash`, and `expand`.
+
+# COMING SOON
+
+- Better documentation.
+- Support for bind params.
+- Support for non-blocking statements.
 
 # REFERENCES
 
