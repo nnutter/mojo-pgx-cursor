@@ -1,11 +1,29 @@
 package Mojo::PgX::Cursor;
-use 5.008001;
-use strict;
-use warnings;
+
+require Mojo::PgX::Cursor::Cursor;
+require Mojo::PgX::Cursor::Results;
+
+use Mojo::Base 'Mojo::Pg';
+use Mojo::Util 'monkey_patch';
 
 our $VERSION = "0.01";
 
+sub import {
+    my $class = shift;
+    return unless @_;
+    if ($_[0] eq 'monkey_patch') {
+        monkey_patch 'Mojo::Pg', 'cursor', \&cursor;
+    }
+}
 
+sub cursor {
+    my ($pg, $query) = (shift, shift);
+    my $cursor = Mojo::PgX::Cursor::Cursor->new(
+        query => $query,
+        db => $pg->db,
+    );
+    return Mojo::PgX::Cursor::Results->new(cursor => $cursor);
+}
 
 1;
 __END__
