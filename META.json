@@ -4,7 +4,7 @@
       "Nathaniel Nutter C<nnutter@cpan.org>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Minilla/v2.5.0, CPAN::Meta::Converter version 2.150005",
+   "generated_by" : "Minilla/v2.5.0, CPAN::Meta::Converter version 2.150001",
    "license" : [
       "perl_5"
    ],
@@ -43,6 +43,8 @@
       "runtime" : {
          "requires" : {
             "Mojo::Pg" : "0",
+            "UUID::Tiny" : "0",
+            "namespace::clean" : "0",
             "perl" : "5.008001"
          }
       },
@@ -64,6 +66,5 @@
          "web" : "https://github.com/nnutter/mojo-pgx-cursor"
       }
    },
-   "version" : "0.01",
-   "x_serialization_backend" : "JSON::PP version 2.27300"
+   "version" : "0.01"
 }
