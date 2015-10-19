@@ -5,7 +5,7 @@ use namespace::clean;
 
 use Mojo::Base -base;
 
-has [qw(db name query)];
+has [qw(bind db name query)];
 
 sub DESTROY {
   my $self = shift;
@@ -19,18 +19,21 @@ sub close {
 }
 
 sub fetch {
-  my ($self, $fetch) = (shift, shift);
+  my ($self, $fetch) = (shift, (shift || 1));
   my $query = sprintf('fetch %s from "%s"', $fetch, $self->name);
   return $self->db->query($query);
 }
 
 sub new {
-  my $self = shift->SUPER::new(@_);
-  unless (defined $self->name && length $self->name) {
-    $self->name(create_uuid_as_string(UUID_V4));
-  }
+  my $self = shift->SUPER::new(
+      bind => [],
+      name => create_uuid_as_string(UUID_V4),
+      @_,
+  );
+  return unless defined $self->db
+            and defined $self->query and length $self->query;
   my $query = sprintf('declare "%s" cursor with hold for %s', $self->name, $self->query);
-  $self->db->query($query);
+  $self->db->query($query, @{$self->bind});
   $self->{close} = 1;
   return $self;
 }

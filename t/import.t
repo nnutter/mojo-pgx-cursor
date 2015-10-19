@@ -29,5 +29,14 @@ ok !!Mojo::Pg->can('cursor'), 'Mojo::Pg can cursor';
   is_deeply [sort @names], [sort qw(foo bar)], 'got both names';
 }
 
-done_testing();
+{
+  my $results = $pg->cursor('select name from import_test where name = (?)', 'foo');
+  my @names;
+  while (my $row = $results->hash) {
+    ok $results->rows, 'got rows';
+    push @names, $row->{name};
+  }
+  is_deeply [@names], ['foo'], 'got only one name';
+}
 
+done_testing();

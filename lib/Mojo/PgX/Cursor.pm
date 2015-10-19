@@ -16,10 +16,11 @@ sub import {
 }
 
 sub cursor {
-    my ($pg, $query) = (shift, shift);
+    my ($pg, $query, @bind) = (shift, shift, @_);
     my $cursor = Mojo::PgX::Cursor::Cursor->new(
         query => $query,
         db => $pg->db,
+        bind => \@bind,
     );
     return Mojo::PgX::Cursor::Results->new(cursor => $cursor);
 }
@@ -75,6 +76,7 @@ with that comes a few complications:
 =head2 cursor
 
     my $results = $db->cursor('select * from foo');
+    my $results = $db->cursor('select * from foo where id >= (?)', 10);
 
 Execute a blocking statement and return an L<Mojo::PgX::Cursor::Results> object
 to iterate over the results.  Unlike L<Mojo::Pg::Results> results are fetched
@@ -94,8 +96,6 @@ C<array>, C<columns>, C<hash>, and C<expand>.
 =over
 
 =item Better documentation.
-
-=item Support for bind params.
 
 =item Support for non-blocking statements.
 

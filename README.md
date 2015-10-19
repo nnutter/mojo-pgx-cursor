@@ -39,6 +39,7 @@ with that comes a few complications:
 ## cursor
 
     my $results = $db->cursor('select * from foo');
+    my $results = $db->cursor('select * from foo where id >= (?)', 10);
 
 Execute a blocking statement and return an [Mojo::PgX::Cursor::Results](https://metacpan.org/pod/Mojo::PgX::Cursor::Results) object
 to iterate over the results.  Unlike [Mojo::Pg::Results](https://metacpan.org/pod/Mojo::Pg::Results) results are fetched
@@ -56,7 +57,6 @@ the number of rows in the batch not the total rows for the query.
 # COMING SOON
 
 - Better documentation.
-- Support for bind params.
 - Support for non-blocking statements.
 
 # REFERENCES
