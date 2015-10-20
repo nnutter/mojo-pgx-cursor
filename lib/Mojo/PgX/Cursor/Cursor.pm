@@ -1,7 +1,6 @@
 package Mojo::PgX::Cursor::Cursor;
 
-use UUID::Tiny ':std';
-use namespace::clean;
+require UUID::Tiny;
 
 use Mojo::Base -base;
 
@@ -27,7 +26,7 @@ sub fetch {
 sub new {
   my $self = shift->SUPER::new(
       bind => [],
-      name => create_uuid_as_string(UUID_V4),
+      name => UUID::Tiny::create_uuid_as_string(UUID::Tiny::UUID_V4()),
       @_,
   );
   return unless defined $self->db
