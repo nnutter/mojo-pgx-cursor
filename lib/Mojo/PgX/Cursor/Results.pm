@@ -5,35 +5,35 @@ require Mojo::PgX::Cursor::Cursor;
 use Mojo::Base -base;
 
 sub array {
-    my $self = shift->_fetch;
-    $self->{remaining}--;
-    return $self->{results}->array;
+  my $self = shift->_fetch;
+  $self->{remaining}--;
+  return $self->{results}->array;
 }
 
 sub columns { shift->{results}->columns }
 
 sub cursor {
-    my $self = shift;
-    if (@_) {
-        $self->{cursor} = shift;
-        delete $self->{remaining};
-        delete $self->{results};
-        return $self;
-    }
-    return $self->{cursor};
+  my $self = shift;
+  if (@_) {
+    $self->{cursor} = shift;
+    delete $self->{remaining};
+    delete $self->{results};
+    return $self;
+  }
+  return $self->{cursor};
 }
 
 sub hash {
-    my $self = shift->_fetch;
-    $self->{remaining}--;
-    return $self->{results}->hash;
+  my $self = shift->_fetch;
+  $self->{remaining}--;
+  return $self->{results}->hash;
 }
 
 sub expand {
-    my $self = shift;
-    $self->{expand}++;
-    $self->{results}->expand;
-    return $self;
+  my $self = shift;
+  $self->{expand}++;
+  $self->{results}->expand;
+  return $self;
 }
 
 sub new { shift->SUPER::new(@_)->_fetch }
@@ -41,14 +41,14 @@ sub new { shift->SUPER::new(@_)->_fetch }
 sub rows { shift->{results}->rows }
 
 sub _fetch {
-    my $self = shift;
-    unless ($self->{remaining}) {
-        my $fetch_rows = 1;
-        $self->{results} = $self->cursor->fetch($fetch_rows);
-        $self->{results}->expand if ($self->{expand});
-        $self->{remaining} = $self->{results}->rows;
-    }
-    return $self;
+  my $self = shift;
+  unless ($self->{remaining}) {
+    my $fetch_rows = 1;
+    $self->{results} = $self->cursor->fetch($fetch_rows);
+    $self->{results}->expand if ($self->{expand});
+    $self->{remaining} = $self->{results}->rows;
+  }
+  return $self;
 }
 
 1;

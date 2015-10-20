@@ -25,13 +25,14 @@ sub fetch {
 
 sub new {
   my $self = shift->SUPER::new(
-      bind => [],
-      name => UUID::Tiny::create_uuid_as_string(UUID::Tiny::UUID_V4()),
-      @_,
+    bind => [],
+    name => UUID::Tiny::create_uuid_as_string(UUID::Tiny::UUID_V4()),
+    @_,
   );
   return unless defined $self->db
-            and defined $self->query and length $self->query;
-  my $query = sprintf('declare "%s" cursor with hold for %s', $self->name, $self->query);
+    and defined $self->query and length $self->query;
+  my $query = sprintf('declare "%s" cursor with hold for %s',
+    $self->name, $self->query);
   $self->db->query($query, @{$self->bind});
   $self->{close} = 1;
   return $self;
@@ -96,8 +97,8 @@ Fetch rows from the cursor.
 =head2 new
 
     my $cursor = Mojo::PgX::Cursor::Cursor->new(
-        db => $pg->db,
-        query => 'select * from foo',
+      db => $pg->db,
+      query => 'select * from foo',
     );
 
 Construct a new L<Mojo::PgX::Cursor::Cursor> object.

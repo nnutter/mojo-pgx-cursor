@@ -9,20 +9,20 @@ use Mojo::Util 'monkey_patch';
 our $VERSION = "0.01";
 
 sub import {
-    my $class = shift;
-    if (defined $_[0] and $_[0] eq 'monkey_patch') {
-        monkey_patch 'Mojo::Pg', 'cursor', \&cursor;
-    }
+  my $class = shift;
+  if (defined $_[0] and $_[0] eq 'monkey_patch') {
+    monkey_patch 'Mojo::Pg', 'cursor', \&cursor;
+  }
 }
 
 sub cursor {
-    my ($pg, $query, @bind) = (shift, shift, @_);
-    my $cursor = Mojo::PgX::Cursor::Cursor->new(
-        query => $query,
-        db => $pg->db,
-        bind => \@bind,
-    );
-    return Mojo::PgX::Cursor::Results->new(cursor => $cursor);
+  my ($pg, $query, @bind) = (shift, shift, @_);
+  my $cursor = Mojo::PgX::Cursor::Cursor->new(
+    query => $query,
+    db    => $pg->db,
+    bind  => \@bind,
+  );
+  return Mojo::PgX::Cursor::Results->new(cursor => $cursor);
 }
 
 1;
