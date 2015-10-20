@@ -30,10 +30,15 @@ Mojo::PgX::Cursor - Cursor Extension for Mojo::Pg
 
 =head1 SYNOPSIS
 
+    # using subclass
     require Mojo::PgX::Cursor;
     my $pg = Mojo::PgX::Cursor->new(...);
     my $results = $pg->db->cursor('select * from some_table');
+    while (my $row = $results->hash) {
+      ...
+    }
 
+    # using monkey patch
     use Mojo::PgX::Cursor 'monkey_patch';
     my $pg = Mojo::Pg->new(...);
     my $results = $pg->db->cursor('select * from some_table');
