@@ -93,6 +93,11 @@ C<array>, C<columns>, C<hash>, and C<expand>.
 
 =head1 DISCUSSION
 
+This whole thing would be irrelevant if L<DBD::Pg> did not fetch all rows
+during C<execute> and since C<libpq> supports that it would be much better to
+implement that than to implement this.  However, I don't really know C and I'm
+not really sure I want to spend time learning it over another language.
+
 I'm not yet sure how to implement non-blocking.  I have to investigate whether
 declaring a cursor is non-instant.  Also, using the
 L<Mojo::PgX::Cursor::Results> iterator abstracts away the database calls so I
