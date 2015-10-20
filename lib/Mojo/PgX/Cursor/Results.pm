@@ -20,7 +20,12 @@ sub hash {
     return $self->{results}->hash;
 }
 
-sub expand { ++$_[0]{expand} and return $_[0] }
+sub expand {
+    my $self = shift;
+    $self->{expand}++;
+    $self->{results}->expand;
+    return $self;
+}
 
 sub new { shift->SUPER::new(@_)->_fetch }
 
