@@ -24,6 +24,10 @@ __END__
 
 Mojo::PgX::Cursor::Database
 
+=head1 DESCRIPTION
+
+Subclass of L<Mojo::Pg::Database>.  Adds the C<cursor> method.
+
 =head1 METHODS
 
 =head2 cursor
