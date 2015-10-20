@@ -17,10 +17,10 @@ $db->query(
 );
 $db->query('insert into subclass_test (name) values (?)', $_) for qw(foo bar);
 
-ok !Mojo::Pg->can('cursor'), 'Mojo::Pg cannot cursor';
+ok !Mojo::Pg::Database->can('cursor'), 'Mojo::Pg::Database cannot cursor';
 
 {
-  my $results = $pg->cursor('select name from subclass_test');
+  my $results = $pg->db->cursor('select name from subclass_test');
   my @names;
   while (my $row = $results->hash) {
     ok $results->rows, 'got rows';

@@ -6,6 +6,6 @@ plan skip_all => 'set TEST_ONLINE to enable this test' unless $ENV{TEST_ONLINE};
 
 use Mojo::PgX::Cursor;
 
-ok !Mojo::Pg->can('cursor'), 'Mojo::Pg can cursor';
+ok !Mojo::Pg::Database->can('cursor'), 'Mojo::Pg::Database can cursor';
 
 done_testing();

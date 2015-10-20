@@ -17,10 +17,10 @@ $db->query(
 );
 $db->query('insert into import_test (name) values (?)', $_) for qw(foo bar);
 
-ok !!Mojo::Pg->can('cursor'), 'Mojo::Pg can cursor';
+ok !!Mojo::Pg::Database->can('cursor'), 'Mojo::Pg::Database can cursor';
 
 {
-  my $results = $pg->cursor('select name from import_test');
+  my $results = $pg->db->cursor('select name from import_test');
   my @names;
   while (my $row = $results->hash) {
     ok $results->rows, 'got rows';
@@ -30,7 +30,7 @@ ok !!Mojo::Pg->can('cursor'), 'Mojo::Pg can cursor';
 }
 
 {
-  my $results = $pg->cursor('select name from import_test where name = (?)', 'foo');
+  my $results = $pg->db->cursor('select name from import_test where name = (?)', 'foo');
   my @names;
   while (my $row = $results->hash) {
     ok $results->rows, 'got rows';

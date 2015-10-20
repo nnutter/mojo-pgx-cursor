@@ -1,7 +1,6 @@
 package Mojo::PgX::Cursor;
 
-require Mojo::PgX::Cursor::Cursor;
-require Mojo::PgX::Cursor::Results;
+require Mojo::PgX::Cursor::Database;
 
 use Mojo::Base 'Mojo::Pg';
 use Mojo::Util 'monkey_patch';
@@ -11,18 +10,13 @@ our $VERSION = "0.01";
 sub import {
   my $class = shift;
   if (defined $_[0] and $_[0] eq 'monkey_patch') {
-    monkey_patch 'Mojo::Pg', 'cursor', \&cursor;
+    monkey_patch 'Mojo::Pg::Database', 'cursor', \&Mojo::PgX::Cursor::Database::cursor;
   }
 }
 
-sub cursor {
-  my ($pg, $query, @bind) = (shift, shift, @_);
-  my $cursor = Mojo::PgX::Cursor::Cursor->new(
-    query => $query,
-    db    => $pg->db,
-    bind  => \@bind,
-  );
-  return Mojo::PgX::Cursor::Results->new(cursor => $cursor);
+sub db {
+    my $db = shift->SUPER::db(@_);
+    return bless $db, 'Mojo::PgX::Cursor::Database';
 }
 
 1;
@@ -38,11 +32,11 @@ Mojo::PgX::Cursor - Cursor Extension for Mojo::Pg
 
     require Mojo::PgX::Cursor;
     my $pg = Mojo::PgX::Cursor->new(...);
-    my $results = $pg->cursor('select * from some_table');
+    my $results = $pg->db->cursor('select * from some_table');
 
     use Mojo::PgX::Cursor 'monkey_patch';
     my $pg = Mojo::Pg->new(...);
-    my $results = $pg->cursor('select * from some_table');
+    my $results = $pg->db->cursor('select * from some_table');
     while (my $row = $results->hash) {
       ...
     }
@@ -73,23 +67,10 @@ with that comes a few complications:
 
 =head1 METHODS
 
-=head2 cursor
+=head2 db
 
-    my $results = $db->cursor('select * from foo');
-    my $results = $db->cursor('select * from foo where id >= (?)', 10);
-
-Execute a blocking statement and return an L<Mojo::PgX::Cursor::Results> object
-to iterate over the results.  Unlike L<Mojo::Pg::Results> results are fetched
-in batches rather than all at once but this is handled automatically by the
-L<Mojo::PgX::Cursor::Results> object.  Be aware that this makes the object
-behave somewhat differently.
-
-L<Mojo::PgX::Cursor::Results> does not support C<hashes> or C<arrays> since if
-you wish to use those you should just use C<query> instead.  C<rows> returns
-the number of rows in the batch not the total rows for the query.
-
-L<Mojo::PgX::Cursor::Results> should behave like L<Mojo::Pg::Results> for
-C<array>, C<columns>, C<hash>, and C<expand>.
+Overrides L<Mojo::Pg>'s implementation in order to subclass the resulting
+L<Mojo::Pg::Database> object into a L<Mojo::PgX::Cursor::Database>.
 
 =head1 DISCUSSION
 
