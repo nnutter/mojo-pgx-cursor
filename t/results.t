@@ -62,4 +62,32 @@ for (
   is_deeply [sort @names], [sort qw(foo bar)], 'got both names';
 }
 
+{
+  my $cursor1 = Mojo::PgX::Cursor::Cursor->new(
+    query => 'select name, jdoc from results_test',
+    db => $db,
+  );
+  my $cursor2 = Mojo::PgX::Cursor::Cursor->new(
+    query => 'select name, jdoc from results_test',
+    db => $db,
+  );
+  my $results = Mojo::PgX::Cursor::Results->new(
+    cursor => $cursor1,
+  )->expand;
+
+  my @names;
+  while (my $row = $results->hash) {
+    ok $results->rows, 'got rows';
+    push @names, $row->{name};
+    ok ref($row->{jdoc}), 'jdoc was expanded';
+  }
+  $results->cursor($cursor2);
+  while (my $row = $results->hash) {
+    ok $results->rows, 'got rows';
+    push @names, $row->{name};
+    ok ref($row->{jdoc}), 'jdoc was expanded';
+  }
+  is_deeply [sort @names], [sort qw(foo bar foo bar)], 'got all names';
+}
+
 done_testing();
