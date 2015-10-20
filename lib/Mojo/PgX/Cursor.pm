@@ -91,15 +91,14 @@ the number of rows in the batch not the total rows for the query.
 L<Mojo::PgX::Cursor::Results> should behave like L<Mojo::Pg::Results> for
 C<array>, C<columns>, C<hash>, and C<expand>.
 
-=head1 COMING SOON
+=head1 DISCUSSION
 
-=over
-
-=item Better documentation.
-
-=item Support for non-blocking statements.
-
-=back
+I'm not yet sure how to implement non-blocking.  I have to investigate whether
+declaring a cursor is non-instant.  Also, using the
+L<Mojo::PgX::Cursor::Results> iterator abstracts away the database calls so I
+am not sure how non-blocking fits in there.  One idea I have had was to add
+C<map> function, a la L<Mojo::Collection>.  I've never used the non-blocking
+features of L<Mojo::Pg> yet so I don't have a good feel for it.
 
 =head1 REFERENCES
 

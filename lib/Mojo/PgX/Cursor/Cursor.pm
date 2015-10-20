@@ -45,13 +45,63 @@ __END__
 
 =head1 NAME
 
-Mojo::PgX::Cursor::Cursor - ...
+Mojo::PgX::Cursor::Cursor
 
 =head1 SYNOPSIS
 
 =head1 DESCRIPTION
 
-...
+L<Mojo::PgX::Cursor::Cursor> is a scope guard for L<DBD::Pg> cursors.
+
+=head1 ATTRIBUTES
+
+=head2 bind
+
+    $cursor->bind([1, 2, 3]);
+
+Bind values for the L</"query">.
+
+=head2 db
+
+    $cursor->db($pg->db);
+
+The L<Mojo::Pg::Database> the L</"query"> will be run against.
+
+=head2 name
+
+    $cursor->name;
+
+Name for the cursor.  If not set then a random name will be used.
+
+=head2 query
+
+    $cursor->query('select * from foo');
+
+SQL statement for the cursor.
+
+=head1 METHODS
+
+=head2 close
+
+    $cursor->close
+
+Close the cursor.
+
+=head2 fetch
+
+    my $results = $cursor->fetch;
+    my $results = $cursor->fetch(10);
+
+Fetch rows from the cursor.
+
+=head2 new
+
+    my $cursor = Mojo::PgX::Cursor::Cursor->new(
+        db => $pg->db,
+        query => 'select * from foo',
+    );
+
+Construct a new L<Mojo::PgX::Cursor::Cursor> object.
 
 =head1 LICENSE
 
