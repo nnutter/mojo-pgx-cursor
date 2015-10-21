@@ -22,13 +22,17 @@ $db->query(
 for (
     ['foo', encode_json { foo => ['1', '2'] }],
     ['bar', encode_json { bar => ['a', 'b'] }],
+    ['foo', encode_json { foo => ['1', '2'] }],
+    ['bar', encode_json { bar => ['a', 'b'] }],
+    ['foo', encode_json { foo => ['1', '2'] }],
+    ['bar', encode_json { bar => ['a', 'b'] }],
 ) {
     $db->query('insert into results_test (name, jdoc) values (?, ?)', $_->[0], $_->[1]);
 }
 
 {
   my $cursor = Mojo::PgX::Cursor::Cursor->new(
-    query => 'select name from results_test',
+    query => 'select name from results_test limit 2',
     db => $db,
   );
   my $results = Mojo::PgX::Cursor::Results->new(
@@ -46,7 +50,7 @@ for (
 
 {
   my $cursor = Mojo::PgX::Cursor::Cursor->new(
-    query => 'select name, jdoc from results_test',
+    query => 'select name, jdoc from results_test limit 2',
     db => $db,
   );
   my $results = Mojo::PgX::Cursor::Results->new(
@@ -64,11 +68,11 @@ for (
 
 {
   my $cursor1 = Mojo::PgX::Cursor::Cursor->new(
-    query => 'select name, jdoc from results_test',
+    query => 'select name, jdoc from results_test limit 2',
     db => $db,
   );
   my $cursor2 = Mojo::PgX::Cursor::Cursor->new(
-    query => 'select name, jdoc from results_test',
+    query => 'select name, jdoc from results_test limit 2',
     db => $db,
   );
   my $results = Mojo::PgX::Cursor::Results->new(
@@ -88,6 +92,59 @@ for (
     ok ref($row->{jdoc}), 'jdoc was expanded';
   }
   is_deeply [sort @names], [sort qw(foo bar foo bar)], 'got all names';
+}
+
+{
+  my $cursor = Mojo::PgX::Cursor::Cursor->new(
+    query => 'select name, jdoc from results_test',
+    db => $db,
+  );
+  my $results = Mojo::PgX::Cursor::Results->new(
+    cursor    => $cursor,
+    fetch     => 1,
+    reload_at => 1,
+  )->expand;
+
+  is $results->rows, 1, 'fetched 1 row';
+  $results->reload(5)->{delay}->wait;
+  is $results->rows, 5, 'fetched 5 rows';
+}
+
+{
+  my $cursor = Mojo::PgX::Cursor::Cursor->new(
+    query => 'select name, jdoc from results_test',
+    db => $db,
+  );
+  my $results = Mojo::PgX::Cursor::Results->new(
+    cursor    => $cursor,
+    fetch     => 0,
+    reload_at => 0,
+  )->expand;
+  is $results->rows, 0, 'fetched 0 row';
+  $results->reload(0)->{delay}->wait;
+  is $results->rows, 0, 'fetched 0 row';
+}
+
+{
+  my $cursor = Mojo::PgX::Cursor::Cursor->new(
+    query => 'select name, jdoc from results_test',
+    db => $db,
+  );
+  my $results = Mojo::PgX::Cursor::Results->new(
+    cursor    => $cursor,
+    fetch     => 3,
+    reload_at => 2,
+  )->expand;
+
+  my $orig_reload =  \&Mojo::PgX::Cursor::Results::reload;
+  my $reload;
+  no warnings 'redefine';
+  local *Mojo::PgX::Cursor::Results::reload = sub {
+      $reload++;
+      $orig_reload->(@_);
+  };
+  while (my $row = $results->hash) {}
+  is $reload, 2, 'reloaded twice';
 }
 
 done_testing();
