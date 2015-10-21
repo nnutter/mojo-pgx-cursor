@@ -60,6 +60,12 @@ am not sure how non-blocking fits in there.  One idea I have had was to add
 `map` function, a la [Mojo::Collection](https://metacpan.org/pod/Mojo::Collection).  I've never used the non-blocking
 features of [Mojo::Pg](https://metacpan.org/pod/Mojo::Pg) yet so I don't have a good feel for it.
 
+# CONTRIBUTING
+
+If you would like to submit bug reports, feature requests, questions, etc. you
+should create an issue on the <GitHub Issue
+Tracker|https://github.com/nnutter/mojo-pgx-cursor/issues> for this module.
+
 # REFERENCES
 
 - [#93266 for DBD-Pg: DBD::Pg to set the fetch size](https://rt.cpan.org/Public/Bug/Display.html?id=93266)

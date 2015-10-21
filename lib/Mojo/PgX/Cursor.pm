@@ -91,6 +91,12 @@ am not sure how non-blocking fits in there.  One idea I have had was to add
 C<map> function, a la L<Mojo::Collection>.  I've never used the non-blocking
 features of L<Mojo::Pg> yet so I don't have a good feel for it.
 
+=head1 CONTRIBUTING
+
+If you would like to submit bug reports, feature requests, questions, etc. you
+should create an issue on the <GitHub Issue
+Tracker|https://github.com/nnutter/mojo-pgx-cursor/issues> for this module.
+
 =head1 REFERENCES
 
 =over
