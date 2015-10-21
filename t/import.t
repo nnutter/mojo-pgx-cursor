@@ -39,4 +39,6 @@ ok !!Mojo::Pg::Database->can('cursor'), 'Mojo::Pg::Database can cursor';
   is_deeply [@names], ['foo'], 'got only one name';
 }
 
+$db->query('drop table import_test');
+
 done_testing();

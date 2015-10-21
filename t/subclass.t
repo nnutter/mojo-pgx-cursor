@@ -29,4 +29,6 @@ ok !Mojo::Pg::Database->can('cursor'), 'Mojo::Pg::Database cannot cursor';
   is_deeply [sort @names], [sort qw(foo bar)], 'got both names';
 }
 
+$db->query('drop table subclass_test');
+
 done_testing();

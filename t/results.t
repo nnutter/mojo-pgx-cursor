@@ -147,4 +147,6 @@ for (
   is $reload, 2, 'reloaded twice';
 }
 
+$db->query('drop table results_test');
+
 done_testing();
