@@ -18,9 +18,13 @@ sub close {
 }
 
 sub fetch {
-  my ($self, $fetch) = (shift, (shift || 1));
+  my $self = shift;
+  my $fetch = (defined $_[0] && not ref $_[0]) ? shift : 1;
+  my $callback = shift;
   my $query = sprintf('fetch %s from "%s"', $fetch, $self->name);
-  return $self->db->query($query);
+  my @query_params = $query;
+  push @query_params, $callback if $callback;
+  return $self->db->query(@query_params);
 }
 
 sub new {

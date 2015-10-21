@@ -61,7 +61,7 @@ $db->query('insert into cursor_test (name) values (?)', $_) for qw(foo bar);
 
 {
   my $closed;
-  no warnings 'redefine';
+  no warnings qw(once redefine);
   local *Mojo::PgX::Cursor::Cursor::close = sub { $closed++};
   {
     my $cursor = Mojo::PgX::Cursor::Cursor->new(
@@ -100,6 +100,25 @@ $db->query('insert into cursor_test (name) values (?)', $_) for qw(foo bar);
   }
   eval { $db->query(qq(fetch all from "$name")) };
   like $@, qr/$name/, 'fetch from destroyed cursor failed';
+}
+
+{
+  my $cursor = Mojo::PgX::Cursor::Cursor->new(
+    db => $db,
+    name => 'my_cursor',
+    query => 'select name from cursor_test',
+  );
+  my $results;
+  Mojo::IOLoop->delay(
+    sub {
+      my $delay = shift;
+      $cursor->fetch($delay->begin);
+    },
+    sub {
+      $results = $_[2];
+    },
+  )->wait;
+  ok $results->rows, 'fetched some';
 }
 
 $db->query('drop table cursor_test');
