@@ -53,13 +53,6 @@ during `execute` and since `libpq` supports that it would be much better to
 implement that than to implement this.  However, I don't really know C and I'm
 not really sure I want to spend time learning it over another language.
 
-I'm not yet sure how to implement non-blocking.  I have to investigate whether
-declaring a cursor is non-instant.  Also, using the
-[Mojo::PgX::Cursor::Results](https://metacpan.org/pod/Mojo::PgX::Cursor::Results) iterator abstracts away the database calls so I
-am not sure how non-blocking fits in there.  One idea I have had was to add
-`map` function, a la [Mojo::Collection](https://metacpan.org/pod/Mojo::Collection).  I've never used the non-blocking
-features of [Mojo::Pg](https://metacpan.org/pod/Mojo::Pg) yet so I don't have a good feel for it.
-
 # CONTRIBUTING
 
 If you would like to submit bug reports, feature requests, questions, etc. you
