@@ -5,7 +5,7 @@ require Mojo::PgX::Cursor::Database;
 use Mojo::Base 'Mojo::Pg';
 use Mojo::Util 'monkey_patch';
 
-our $VERSION = "0.01";
+our $VERSION = "0.01_1";
 
 sub import {
   my $class = shift;

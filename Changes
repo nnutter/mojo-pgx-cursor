@@ -2,5 +2,7 @@ Revision history for Perl extension Mojo-PgX-Cursor
 
 {{$NEXT}}
 
+0.01_1 2015-10-22T04:19:11Z
+
     - original version
 
