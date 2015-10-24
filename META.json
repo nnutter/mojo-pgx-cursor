@@ -42,9 +42,11 @@
       },
       "runtime" : {
          "requires" : {
-            "Mojo::Pg" : "0",
-            "UUID::Tiny" : "0",
-            "perl" : "5.008001"
+            "Mojo::Pg" : "2.0",
+            "Mojolicious" : "6.0",
+            "Time::HiRes" : "1.00",
+            "UUID::Tiny" : "1.01",
+            "perl" : "5.010001"
          }
       },
       "test" : {
@@ -65,5 +67,5 @@
          "web" : "https://github.com/nnutter/mojo-pgx-cursor"
       }
    },
-   "version" : "0.03"
+   "version" : "0.04"
 }
