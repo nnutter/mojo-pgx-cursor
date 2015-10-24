@@ -27,6 +27,15 @@ extension to work around this issue using PostgreSQL cursors while providing a
 This subclass overrides [Mojo::Pg](https://metacpan.org/pod/Mojo::Pg)'s implementation in order to subclass the
 resulting [Mojo::Pg::Database](https://metacpan.org/pod/Mojo::Pg::Database) object into a [Mojo::PgX::Cursor::Database](https://metacpan.org/pod/Mojo::PgX::Cursor::Database).
 
+# VERSIONING
+
+This module will follow [Semantic Versioning
+2.0.0](http://semver.org/spec/v2.0.0.html).  Once the API feels reasonable I'll
+release v1.0.0 which would correspond to 1.000000 according to [version](https://metacpan.org/pod/version),
+
+    version->declare(q(v1.0.0))->numify # 1.000000
+    version->parse(q(1.000000))->normal # v1.0.0
+
 # MONKEYPATCH
 
     require Mojo::Pg;

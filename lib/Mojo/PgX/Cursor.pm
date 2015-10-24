@@ -44,6 +44,15 @@ L<Mojo::PgX::Cursor::Results> for details.
 This subclass overrides L<Mojo::Pg>'s implementation in order to subclass the
 resulting L<Mojo::Pg::Database> object into a L<Mojo::PgX::Cursor::Database>.
 
+=head1 VERSIONING
+
+This module will follow L<Semantic Versioning
+2.0.0|http://semver.org/spec/v2.0.0.html>.  Once the API feels reasonable I'll
+release v1.0.0 which would correspond to 1.000000 according to L<version>,
+
+    version->declare(q(v1.0.0))->numify # 1.000000
+    version->parse(q(1.000000))->normal # v1.0.0
+
 =head1 MONKEYPATCH
 
     require Mojo::Pg;
