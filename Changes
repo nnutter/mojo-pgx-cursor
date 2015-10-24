@@ -2,6 +2,8 @@ Revision history for Perl extension Mojo-PgX-Cursor
 
 {{$NEXT}}
 
+0.03 2015-10-24T05:28:43Z
+
     - Manually created cursors now also default to fetching 100 row iterations.
     - Fix warning during cursor destruction.
     - Documentation cleanup.
