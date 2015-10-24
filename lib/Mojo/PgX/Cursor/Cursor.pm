@@ -20,7 +20,7 @@ sub close {
 sub fetch {
   my $self = shift;
   my $cb = ref $_[-1] eq 'CODE' ? pop : undef;
-  my $fetch = shift // 1;
+  my $fetch = shift // 100;
   my $query = sprintf('fetch %s from %s', $fetch, $self->db->dbh->quote_identifier($self->name));
   my @query_params = $query;
   push @query_params, $cb if $cb;
