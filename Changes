@@ -2,6 +2,9 @@ Revision history for Perl extension Mojo-PgX-Cursor
 
 {{$NEXT}}
 
+    - Remove the 'monkey_patch' import option.  If you wish to monkey patch
+      Mojo::Pg then see the documentation on how to do so.
+
 0.01 2015-10-23T02:15:50Z
 
     - original version

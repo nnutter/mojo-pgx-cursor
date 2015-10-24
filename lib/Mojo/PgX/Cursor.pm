@@ -3,16 +3,8 @@ package Mojo::PgX::Cursor;
 require Mojo::PgX::Cursor::Database;
 
 use Mojo::Base 'Mojo::Pg';
-use Mojo::Util 'monkey_patch';
 
 our $VERSION = "0.01";
-
-sub import {
-  my $class = shift;
-  if (defined $_[0] and $_[0] eq 'monkey_patch') {
-    monkey_patch 'Mojo::Pg::Database', 'cursor', \&Mojo::PgX::Cursor::Database::cursor;
-  }
-}
 
 sub db {
     my $db = shift->SUPER::db(@_);
@@ -30,17 +22,8 @@ Mojo::PgX::Cursor - Cursor Extension for Mojo::Pg
 
 =head1 SYNOPSIS
 
-    # using subclass
     require Mojo::PgX::Cursor;
     my $pg = Mojo::PgX::Cursor->new(...);
-    my $results = $pg->db->cursor('select * from some_table');
-    while (my $row = $results->hash) {
-      ...
-    }
-
-    # using monkey patch
-    use Mojo::PgX::Cursor 'monkey_patch';
-    my $pg = Mojo::Pg->new(...);
     my $results = $pg->db->cursor('select * from some_table');
     while (my $row = $results->hash) {
       ...
@@ -76,6 +59,17 @@ with that comes a few complications:
 
 Overrides L<Mojo::Pg>'s implementation in order to subclass the resulting
 L<Mojo::Pg::Database> object into a L<Mojo::PgX::Cursor::Database>.
+
+=head1 MONKEYPATCH
+
+    require Mojo::Pg;
+    require Mojo::PgX::Cursor;
+    use Mojo::Util 'monkey_patch';
+    monkey_patch 'Mojo::Pg::Database', 'cursor', \&Mojo::PgX::Cursor::Database::cursor;
+
+Just because you can doesn't mean you should but if you want you can
+C<monkey_patch> L<Mojo::Pg::Database> rather than swapping out your
+construction of L<Mojo::Pg> objects with the L<Mojo::PgX::Cursor> subclass.
 
 =head1 DISCUSSION
 

@@ -5,17 +5,8 @@ Mojo::PgX::Cursor - Cursor Extension for Mojo::Pg
 
 # SYNOPSIS
 
-    # using subclass
     require Mojo::PgX::Cursor;
     my $pg = Mojo::PgX::Cursor->new(...);
-    my $results = $pg->db->cursor('select * from some_table');
-    while (my $row = $results->hash) {
-      ...
-    }
-
-    # using monkey patch
-    use Mojo::PgX::Cursor 'monkey_patch';
-    my $pg = Mojo::Pg->new(...);
     my $results = $pg->db->cursor('select * from some_table');
     while (my $row = $results->hash) {
       ...
@@ -45,6 +36,17 @@ with that comes a few complications:
 
 Overrides [Mojo::Pg](https://metacpan.org/pod/Mojo::Pg)'s implementation in order to subclass the resulting
 [Mojo::Pg::Database](https://metacpan.org/pod/Mojo::Pg::Database) object into a [Mojo::PgX::Cursor::Database](https://metacpan.org/pod/Mojo::PgX::Cursor::Database).
+
+# MONKEYPATCH
+
+    require Mojo::Pg;
+    require Mojo::PgX::Cursor;
+    use Mojo::Util 'monkey_patch';
+    monkey_patch 'Mojo::Pg::Database', 'cursor', \&Mojo::PgX::Cursor::Database::cursor;
+
+Just because you can doesn't mean you should but if you want you can
+`monkey_patch` [Mojo::Pg::Database](https://metacpan.org/pod/Mojo::Pg::Database) rather than swapping out your
+construction of [Mojo::Pg](https://metacpan.org/pod/Mojo::Pg) objects with the [Mojo::PgX::Cursor](https://metacpan.org/pod/Mojo::PgX::Cursor) subclass.
 
 # DISCUSSION
 

@@ -4,7 +4,10 @@ use Test::More;
 
 plan skip_all => 'set TEST_ONLINE to enable this test' unless $ENV{TEST_ONLINE};
 
-use Mojo::PgX::Cursor 'monkey_patch';
+require Mojo::Pg;
+require Mojo::PgX::Cursor;
+use Mojo::Util 'monkey_patch';
+monkey_patch 'Mojo::Pg::Database', 'cursor', \&Mojo::PgX::Cursor::Database::cursor;
 
 my $pg = Mojo::Pg->new($ENV{TEST_ONLINE});
 my $db = $pg->db;
