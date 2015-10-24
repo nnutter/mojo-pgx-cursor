@@ -43,7 +43,7 @@ sub expand {
 
 sub new {
   my $self = shift->SUPER::new(
-    fetch => 10,
+    fetch => 100,
     remaining => 0,
     @_
   );
@@ -112,11 +112,11 @@ L<Mojo::PgX::Cursor::Cursor> results are fetched from.
 
 =head2 fetch
 
-    $results->fetch(100);
+    $results->fetch(10);
 
 The quantity of rows to fetch in each batch of rows.  Smaller uses less memory.
 Since the next batch is always pre-fetched up to twice this many rows will be
-in memory at any given time.
+in memory at any given time.  Defaults to 100.
 
 =head2 seconds_blocked
 

@@ -2,6 +2,7 @@ Revision history for Perl extension Mojo-PgX-Cursor
 
 {{$NEXT}}
 
+    - Increase default fetch size to 100.
     - Remove the 'reload_at' attribute; it was unnecessary complexity.
     - Remove the 'monkey_patch' import option.  If you wish to monkey patch
       Mojo::Pg then see the documentation on how to do so.
