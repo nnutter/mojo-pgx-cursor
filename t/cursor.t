@@ -11,6 +11,7 @@ require Mojo::PgX::Cursor::Cursor;
 
 my $pg = Mojo::Pg->new($ENV{TEST_ONLINE});
 my $db = $pg->db;
+$db->query('set client_min_messages=WARNING');
 $db->query('drop table if exists cursor_test');
 $db->query(
   'create table if not exists cursor_test (

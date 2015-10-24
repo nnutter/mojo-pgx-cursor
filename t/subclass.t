@@ -10,6 +10,7 @@ require Mojo::PgX::Cursor;
 
 my $pg = Mojo::PgX::Cursor->new($ENV{TEST_ONLINE});
 my $db = $pg->db;
+$db->query('set client_min_messages=WARNING');
 $db->query('drop table if exists subclass_test');
 $db->query(
   'create table if not exists subclass_test (

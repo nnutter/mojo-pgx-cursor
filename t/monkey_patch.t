@@ -13,6 +13,7 @@ monkey_patch 'Mojo::Pg::Database', 'cursor', \&Mojo::PgX::Cursor::Database::curs
 
 my $pg = Mojo::Pg->new($ENV{TEST_ONLINE});
 my $db = $pg->db;
+$db->query('set client_min_messages=WARNING');
 $db->query('drop table if exists import_test');
 $db->query(
   'create table if not exists import_test (

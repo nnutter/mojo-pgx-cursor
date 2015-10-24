@@ -13,6 +13,7 @@ require Mojo::PgX::Cursor::Results;
 
 my $pg = Mojo::Pg->new($ENV{TEST_ONLINE});
 my $db = $pg->db;
+$db->query('set client_min_messages=WARNING');
 $db->query('drop table if exists results_test');
 $db->query(
   'create table if not exists results_test (

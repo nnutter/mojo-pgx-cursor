@@ -3,6 +3,7 @@ Revision history for Perl extension Mojo-PgX-Cursor
 {{$NEXT}}
 
     - Add documentation about versioning.
+    - Suppress PostgreSQL notices in tests.
 
 0.04 2015-10-24T06:42:44Z
 
