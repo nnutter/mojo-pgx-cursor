@@ -46,6 +46,8 @@ for (
   }
   is_deeply $results->columns, ['name'], 'got columns';
   is_deeply [sort @names], [sort qw(foo bar)], 'got both names';
+
+  $results->{delay}->wait;
 }
 
 {
@@ -64,6 +66,8 @@ for (
     ok ref($row->{jdoc}), 'jdoc was expanded';
   }
   is_deeply [sort @names], [sort qw(foo bar)], 'got both names';
+
+  $results->{delay}->wait;
 }
 
 {
@@ -92,6 +96,8 @@ for (
     ok ref($row->{jdoc}), 'jdoc was expanded';
   }
   is_deeply [sort @names], [sort qw(foo bar foo bar)], 'got all names';
+
+  $results->{delay}->wait;
 }
 
 $db->query('drop table results_test');

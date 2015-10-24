@@ -20,10 +20,15 @@ sub columns { shift->{results}->columns }
 sub cursor {
   my $self = shift;
   if (@_) {
+    if ($self->{delay}) {
+        $self->{delay}->wait;
+    }
     $self->{cursor} = shift;
     $self->{remaining} = 0;
+    delete $self->{delay};
+    delete $self->{next};
     delete $self->{results};
-    return $self;
+    return $self->_load_next;
   }
   return $self->{cursor};
 }
@@ -37,7 +42,9 @@ sub hash {
 sub expand {
   my $self = shift;
   $self->{expand}++;
-  $self->{results}->expand;
+  if ($self->{results}) {
+      $self->{results}->expand;
+  }
   return $self;
 }
 
@@ -47,10 +54,10 @@ sub new {
     remaining => 0,
     @_
   );
-  return $self->_fetch
+  return $self->_load_next;
 }
 
-sub _reload {
+sub _load_next {
   my $self = shift;
   $self->{delay} = Mojo::IOLoop->delay(
     sub {
@@ -70,9 +77,6 @@ sub rows { shift->{results}->rows }
 
 sub _fetch {
   my $self = shift;
-  if (not $self->{delay} and not $self->{next}) {
-    $self->_reload;
-  }
   return $self if $self->{remaining};
   unless ($self->{next}) {
     my $start = time;
@@ -82,7 +86,7 @@ sub _fetch {
   }
   $self->{results} = delete $self->{next};
   $self->{remaining} = $self->{results}->rows;
-  return $self;
+  return $self->_load_next;
 }
 
 1;
