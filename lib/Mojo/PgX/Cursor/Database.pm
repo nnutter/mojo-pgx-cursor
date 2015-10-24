@@ -6,11 +6,10 @@ require Mojo::PgX::Cursor::Results;
 use Mojo::Base 'Mojo::Pg::Database';
 
 sub cursor {
-  my ($self, $query, @bind) = (shift, shift, @_);
   my $cursor = Mojo::PgX::Cursor::Cursor->new(
-    query => $query,
-    db    => $self,
-    bind  => \@bind,
+    db    => shift,
+    query => shift,
+    bind  => \@_,
   );
   return Mojo::PgX::Cursor::Results->new(cursor => $cursor);
 }

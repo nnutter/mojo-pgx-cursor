@@ -19,11 +19,11 @@ sub close {
 
 sub fetch {
   my $self = shift;
-  my $fetch = (defined $_[0] && not ref $_[0]) ? shift : 1;
-  my $callback = shift;
+  my $cb = ref $_[-1] eq 'CODE' ? pop : undef;
+  my $fetch = shift // 1;
   my $query = sprintf('fetch %s from %s', $fetch, $self->db->dbh->quote_identifier($self->name));
   my @query_params = $query;
-  push @query_params, $callback if $callback;
+  push @query_params, $cb if $cb;
   return $self->db->query(@query_params);
 }
 

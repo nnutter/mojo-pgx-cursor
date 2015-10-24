@@ -15,7 +15,7 @@ sub array {
   return $self->{results}->array;
 }
 
-sub columns { shift->{results}->columns }
+sub columns { shift->_fetch->{results}->columns }
 
 sub cursor {
   my $self = shift;
@@ -49,11 +49,7 @@ sub expand {
 }
 
 sub new {
-  my $self = shift->SUPER::new(
-    fetch => 100,
-    remaining => 0,
-    @_
-  );
+  my $self = shift->SUPER::new(@_);
   return $self->_load_next;
 }
 
@@ -61,12 +57,10 @@ sub _load_next {
   my $self = shift;
   $self->{delay} = Mojo::IOLoop->delay(
     sub {
-      my $delay = shift;
-      $self->cursor->fetch($self->{fetch}, $delay->begin);
+      $self->cursor->fetch($self->{fetch}, shift->begin);
     },
     sub {
-      my ($delay, $err, $results) = @_;
-      $self->{next} = $results;
+      $self->{next} = $_[2];
       $self->{next}->expand if ($self->{expand});
     },
   );
