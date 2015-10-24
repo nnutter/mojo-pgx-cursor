@@ -15,11 +15,7 @@ sub array {
   return $self->{results}->array;
 }
 
-sub columns {
-    my $self = shift;
-    $self->_fetch unless $self->{results};
-    return $self->{results}->columns;
-}
+sub columns { shift->_results->columns }
 
 sub cursor {
   my $self = shift;
@@ -57,10 +53,20 @@ sub new {
   return $self->_load_next;
 }
 
-sub rows {
-    my $self = shift;
-    $self->_fetch unless $self->{results};
-    return $self->{results}->rows;
+sub rows { shift->_results->rows }
+
+sub _fetch {
+  my $self = shift;
+  return $self if $self->{remaining};
+  unless ($self->{next}) {
+    my $start = time;
+    $self->{delay}->wait;
+    $self->{seconds_blocked} += time - $start;
+    delete $self->{delay};
+  }
+  $self->{results} = delete $self->{next};
+  $self->{remaining} = $self->{results}->rows;
+  return $self->_load_next;
 }
 
 sub _load_next {
@@ -77,18 +83,10 @@ sub _load_next {
   return $self;
 }
 
-sub _fetch {
-  my $self = shift;
-  return $self if $self->{remaining};
-  unless ($self->{next}) {
-    my $start = time;
-    $self->{delay}->wait;
-    $self->{seconds_blocked} += time - $start;
-    delete $self->{delay};
-  }
-  $self->{results} = delete $self->{next};
-  $self->{remaining} = $self->{results}->rows;
-  return $self->_load_next;
+sub _results {
+    my $self = shift;
+    return $self->{results} if $self->{results};
+    return $self->_fetch->{results};
 }
 
 1;
