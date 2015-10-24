@@ -7,7 +7,7 @@ use Time::HiRes qw(time);
 
 use Mojo::Base -base;
 
-has [qw(seconds_blocked fetch reload_at)];
+has [qw(seconds_blocked fetch)];
 
 sub array {
   my $self = shift->_fetch;
@@ -44,28 +44,23 @@ sub expand {
 sub new {
   my $self = shift->SUPER::new(
     fetch => 10,
-    reload_at => 10,
     remaining => 0,
     @_
   );
   return $self->_fetch
 }
 
-sub reload {
-  my ($self, $fetch) = (shift, shift);
-  unless (defined $fetch) {
-      $fetch = $self->{fetch};
-  }
+sub _reload {
+  my $self = shift;
   $self->{delay} = Mojo::IOLoop->delay(
     sub {
       my $delay = shift;
-      $self->cursor->fetch($fetch, $delay->begin);
+      $self->cursor->fetch($self->{fetch}, $delay->begin);
     },
     sub {
       my ($delay, $err, $results) = @_;
-      $self->{results} = $results;
-      $self->{results}->expand if ($self->{expand});
-      $self->{remaining} = $self->{results}->rows;
+      $self->{next} = $results;
+      $self->{next}->expand if ($self->{expand});
     },
   );
   return $self;
@@ -75,15 +70,18 @@ sub rows { shift->{results}->rows }
 
 sub _fetch {
   my $self = shift;
-  if (not $self->{delay} and $self->{remaining} <= $self->{reload_at}) {
-    $self->reload;
+  if (not $self->{delay} and not $self->{next}) {
+    $self->_reload;
   }
-  unless ($self->{remaining}) {
+  return $self if $self->{remaining};
+  unless ($self->{next}) {
     my $start = time;
     $self->{delay}->wait;
     $self->{seconds_blocked} += time - $start;
     delete $self->{delay};
   }
+  $self->{results} = delete $self->{next};
+  $self->{remaining} = $self->{results}->rows;
   return $self;
 }
 
@@ -117,13 +115,8 @@ L<Mojo::PgX::Cursor::Cursor> results are fetched from.
     $results->fetch(100);
 
 The quantity of rows to fetch in each batch of rows.  Smaller uses less memory.
-
-=head2 reload_at
-
-    $results->reload_at(50);
-
-The threshold of remaining rows which will trigger a non-blocking reload to
-start.  Smaller uses less memory.
+Since the next batch is always pre-fetched up to twice this many rows will be
+in memory at any given time.
 
 =head2 seconds_blocked
 
@@ -164,17 +157,6 @@ row will be fetched first.
     my $results = Mojo::PgX::Cursor::Results->new(cursor => $cursor);
 
 Construct a new L<Mojo::PgX::Cursor::Results> object.
-
-=head2 reload
-
-    $results->reload;
-    $results->reload(1000);
-
-Manually trigger a new batch of rows to be fetched.  The
-L<Mojo::PgX::Cursor::Results> object uses the L<"/fetch"> and L<"/reload_at">
-attributes to automatically reload.  This method is just available in case you
-want to implement more advanced logic in your app.  If passed an argument that
-value overrides L<"/fetch">.
 
 =head2 rows
 

@@ -34,18 +34,15 @@ unless ($results) {
   $tx->commit;
 }
 
-use Time::HiRes qw(nanosleep);
-for (
-  [10000, 5000],
-  [100, 100],
-  [10, 10],
-  [1, 1],
-) {
-  my ($fetch, $reload_at) = @{$_};
+use Time::HiRes qw(nanosleep time);
+for my $fetch (reverse (1, 10, 100, 1000, 10000)) {
+  my $start = time;
   my $cursor = $db->cursor('select * from perf_test limit 100000');
-  $cursor->fetch($fetch)->reload_at($reload_at);
+  $cursor->fetch($fetch);
   while (my $row = $cursor->hash) {
     nanosleep 10;
   }
-  say sprintf 'Blocked for %f seconds with fetch = %d and reload_at = %d', $cursor->seconds_blocked, $cursor->fetch, $cursor->reload_at;
+  my $elapsed = time - $start;
+  say sprintf 'Blocked for %6.3f seconds (%4.1f%%) with fetch = %5d',
+    $cursor->seconds_blocked, ($cursor->seconds_blocked / $elapsed * 100), $cursor->fetch;
 }
