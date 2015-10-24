@@ -2,6 +2,8 @@ Revision history for Perl extension Mojo-PgX-Cursor
 
 {{$NEXT}}
 
+0.02 2015-10-24T03:56:38Z
+
     - Results pre-fetch next batch immediately rather than waiting for first
       row of current batch to be pulled off.
     - Increase default fetch size to 100.
