@@ -13,7 +13,7 @@ sub DESTROY {
 
 sub close {
   my $self = shift;
-  my $query = sprintf('close "%s"', $self->name);
+  my $query = sprintf('close %s', $self->db->dbh->quote_identifier($self->name));
   $self->db->query($query) if delete $self->{close};
 }
 
@@ -21,7 +21,7 @@ sub fetch {
   my $self = shift;
   my $fetch = (defined $_[0] && not ref $_[0]) ? shift : 1;
   my $callback = shift;
-  my $query = sprintf('fetch %s from "%s"', $fetch, $self->name);
+  my $query = sprintf('fetch %s from %s', $fetch, $self->db->dbh->quote_identifier($self->name));
   my @query_params = $query;
   push @query_params, $callback if $callback;
   return $self->db->query(@query_params);
@@ -35,8 +35,8 @@ sub new {
   );
   return unless defined $self->db
     and defined $self->query and length $self->query;
-  my $query = sprintf('declare "%s" cursor with hold for %s',
-    $self->name, $self->query);
+  my $query = sprintf('declare %s cursor with hold for %s',
+    $self->db->dbh->quote_identifier($self->name), $self->query);
   $self->db->query($query, @{$self->bind});
   $self->{close} = 1;
   return $self;
