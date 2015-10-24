@@ -23,42 +23,26 @@ Mojo::PgX::Cursor - Cursor Extension for Mojo::Pg
 =head1 SYNOPSIS
 
     require Mojo::PgX::Cursor;
-    my $pg = Mojo::PgX::Cursor->new(...);
-    my $results = $pg->db->cursor('select * from some_table');
-    while (my $row = $results->hash) {
-      ...
+    my $pg = Mojo::PgX::Cursor->new('postgresql://postgres@/test');
+    my $results = $pg->db->cursor('select * from some_big_table');
+    while (my $next = $results->hash) {
+      say $next->{name};
     }
 
 =head1 DESCRIPTION
 
-Mojo::PgX::Cursor is an extension for Mojo::Pg that abstract away the (modest)
-complications of using a PostgreSQL cursor so that you can use a familiar
-iterable interface.
-
-PostgreSQL cursors are useful because the DBD::Pg driver has a long-standing
-limitation that it fetches all results to the client as soon as the statement
-is executed.  This makes, for example, iterating over a whole table very
-memory-expensive.  To work around the issue DBD::Pg
-L<recommends|https://metacpan.org/pod/DBD::Pg#Cursors> using a
-L<cursor|http://www.postgresql.org/docs/current/static/plpgsql-cursors.html> but
-with that comes a few complications:
-
-=over
-
-=item Cursors must be named.
-
-=item Cursors are a resource that should be managed.
-
-=item Cursors require a double loop to iterate through all rows.
-
-=back
+L<DBD::Pg> fetches all rows when a statement is executed whereas other drivers
+usually fetch rows using the C<fetch*> methods.  C<Mojo::PgX::Cursor> is an
+extension to work around this issue using PostgreSQL cursors while providing a
+L<Mojo::Pg>-style API for iteratoring over the results; see
+L<Mojo::PgX::Cursor::Results> for details.
 
 =head1 METHODS
 
 =head2 db
 
-Overrides L<Mojo::Pg>'s implementation in order to subclass the resulting
-L<Mojo::Pg::Database> object into a L<Mojo::PgX::Cursor::Database>.
+This subclass overrides L<Mojo::Pg>'s implementation in order to subclass the
+resulting L<Mojo::Pg::Database> object into a L<Mojo::PgX::Cursor::Database>.
 
 =head1 MONKEYPATCH
 
@@ -73,10 +57,10 @@ construction of L<Mojo::Pg> objects with the L<Mojo::PgX::Cursor> subclass.
 
 =head1 DISCUSSION
 
-This whole thing would be irrelevant if L<DBD::Pg> did not fetch all rows
-during C<execute> and since C<libpq> supports that it would be much better to
-implement that than to implement this.  However, I don't really know C and I'm
-not really sure I want to spend time learning it over another language.
+This module would be unnecessary if L<DBD::Pg> did not fetch all rows during
+C<execute> and since C<libpq> supports that it would be much better to fix
+C<fetch*> than to implement this.  However, I am not able to do so at this
+time.
 
 =head1 CONTRIBUTING
 
@@ -107,7 +91,8 @@ Nathaniel Nutter C<nnutter@cpan.org>
 
 =head1 SEE ALSO
 
-L<DBD::Pg>, L<Mojo::Pg>
+L<DBD::Pg>, L<Mojo::Pg>, L<Mojo::PgX::Cursor::Cursor>,
+L<Mojo::PgX::Cursor::Database>, L<Mojo::PgX::Cursor::Results>
 
 =cut
 

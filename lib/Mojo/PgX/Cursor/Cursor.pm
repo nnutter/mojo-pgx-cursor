@@ -75,7 +75,7 @@ The L<Mojo::Pg::Database> the L</"query"> will be run against.
 
     $cursor->name;
 
-Name for the cursor.  If not set then a random name will be used.
+Name for the cursor.  If not set then a UUID will be used.
 
 =head2 query
 
@@ -120,7 +120,7 @@ Nathaniel Nutter C<nnutter@cpan.org>
 
 =head1 SEE ALSO
 
-L<Mojo::PgX::Cursor>, L<Mojo::PgX::Cursor::Results>
+L<Mojo::PgX::Cursor>, L<Mojo::PgX::Cursor::Database>, L<Mojo::PgX::Cursor::Results>
 
 =cut
 

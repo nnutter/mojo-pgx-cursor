@@ -102,8 +102,16 @@ Mojo::PgX::Cursor::Results
 
 =head1 DESCRIPTION
 
-L<Mojo::PgX::Cursor::Results> is a container for L<Mojo::PgX::Cursor> cursor
-like L<Mojo::Pg::Results> is for statement handles.
+L<Mojo::PgX::Cursor::Results> is a container for a L<Mojo::PgX::Cursor::Cursor>
+like L<Mojo::Pg::Results> is for a statement handle.  Therefore it tries to
+mimic the API of L<Mojo::Pg::Results> whereever it makes sense to do do.
+
+L<Mojo::PgX::Cursor::Results> should behave like L<Mojo::Pg::Results> for
+C<array>, C<columns>, C<hash>, and C<expand>.
+
+L<Mojo::PgX::Cursor::Results> does not support C<hashes> or C<arrays> since if
+you wish to use those you should just use C<query> instead.  Also note, C<rows>
+returns the number of rows in the current iteration not the total rows for the query.
 
 =head1 ATTRIBUTES
 
@@ -112,21 +120,24 @@ like L<Mojo::Pg::Results> is for statement handles.
     my $cursor = $results->cursor;
     $results = $results->cursor($cursor);
 
-L<Mojo::PgX::Cursor::Cursor> results are fetched from.
+The L<Mojo::PgX::Cursor::Cursor> rows are fetched from.
 
 =head2 fetch
 
     $results->fetch(10);
 
-The quantity of rows to fetch in each batch of rows.  Smaller uses less memory.
-Since the next batch is always pre-fetched up to twice this many rows will be
-in memory at any given time.  Defaults to 100.
+The quantity of rows to fetch in each iteration.  Since the next iteration is
+always pre-fetched up to twice this many rows will be in memory at any given
+time.  Set this to optimize for time or memory in your
+specific use case.
+
+Defaults to 100.
 
 =head2 seconds_blocked
 
     my $time_wasted = $results->seconds_blocked;
 
-The cumulative time the cursor has spent blocking upon running out of rows.
+The cumulative time the cursor has spent waiting for rows.
 
 =head1 METHODS
 
@@ -134,8 +145,7 @@ The cumulative time the cursor has spent blocking upon running out of rows.
 
     my $row = $results->array;
 
-Return next row from L</"cursor"> as an array reference.  If necessary, the
-next row will be fetched first.
+Return next row from L</"cursor"> as an array reference.
 
 =head2 columns
 
@@ -153,8 +163,7 @@ Decode C<json> and C<jsonb> fields automatically for all rows.
 
     my $row = $results->hash;
 
-Return next row from L</"cursor"> as a hash reference.  If necessary, the next
-row will be fetched first.
+Return next row from L</"cursor"> as a hash reference.
 
 =head2 new
 
@@ -166,7 +175,7 @@ Construct a new L<Mojo::PgX::Cursor::Results> object.
 
     my $num = $results->rows;
 
-Number of rows in current batch; not total.
+Number of rows in current iteration; not the total for the original query.
 
 =head1 LICENSE
 
@@ -181,7 +190,7 @@ Nathaniel Nutter C<nnutter@cpan.org>
 
 =head1 SEE ALSO
 
-L<Mojo::PgX::Cursor>, L<Mojo::PgX::Cursor::Cursor>
+L<Mojo::PgX::Cursor>, L<Mojo::PgX::Cursor::Cursor>, L<Mojo::PgX::Cursor::Database>
 
 =cut
 

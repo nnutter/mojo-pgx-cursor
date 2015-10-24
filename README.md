@@ -6,36 +6,26 @@ Mojo::PgX::Cursor - Cursor Extension for Mojo::Pg
 # SYNOPSIS
 
     require Mojo::PgX::Cursor;
-    my $pg = Mojo::PgX::Cursor->new(...);
-    my $results = $pg->db->cursor('select * from some_table');
-    while (my $row = $results->hash) {
-      ...
+    my $pg = Mojo::PgX::Cursor->new('postgresql://postgres@/test');
+    my $results = $pg->db->cursor('select * from some_big_table');
+    while (my $next = $results->hash) {
+      say $next->{name};
     }
 
 # DESCRIPTION
 
-Mojo::PgX::Cursor is an extension for Mojo::Pg that abstract away the (modest)
-complications of using a PostgreSQL cursor so that you can use a familiar
-iterable interface.
-
-PostgreSQL cursors are useful because the DBD::Pg driver has a long-standing
-limitation that it fetches all results to the client as soon as the statement
-is executed.  This makes, for example, iterating over a whole table very
-memory-expensive.  To work around the issue DBD::Pg
-[recommends](https://metacpan.org/pod/DBD::Pg#Cursors) using a
-[cursor](http://www.postgresql.org/docs/current/static/plpgsql-cursors.html) but
-with that comes a few complications:
-
-- Cursors must be named.
-- Cursors are a resource that should be managed.
-- Cursors require a double loop to iterate through all rows.
+[DBD::Pg](https://metacpan.org/pod/DBD::Pg) fetches all rows when a statement is executed whereas other drivers
+usually fetch rows using the `fetch*` methods.  `Mojo::PgX::Cursor` is an
+extension to work around this issue using PostgreSQL cursors while providing a
+[Mojo::Pg](https://metacpan.org/pod/Mojo::Pg)-style API for iteratoring over the results; see
+[Mojo::PgX::Cursor::Results](https://metacpan.org/pod/Mojo::PgX::Cursor::Results) for details.
 
 # METHODS
 
 ## db
 
-Overrides [Mojo::Pg](https://metacpan.org/pod/Mojo::Pg)'s implementation in order to subclass the resulting
-[Mojo::Pg::Database](https://metacpan.org/pod/Mojo::Pg::Database) object into a [Mojo::PgX::Cursor::Database](https://metacpan.org/pod/Mojo::PgX::Cursor::Database).
+This subclass overrides [Mojo::Pg](https://metacpan.org/pod/Mojo::Pg)'s implementation in order to subclass the
+resulting [Mojo::Pg::Database](https://metacpan.org/pod/Mojo::Pg::Database) object into a [Mojo::PgX::Cursor::Database](https://metacpan.org/pod/Mojo::PgX::Cursor::Database).
 
 # MONKEYPATCH
 
@@ -50,10 +40,10 @@ construction of [Mojo::Pg](https://metacpan.org/pod/Mojo::Pg) objects with the [
 
 # DISCUSSION
 
-This whole thing would be irrelevant if [DBD::Pg](https://metacpan.org/pod/DBD::Pg) did not fetch all rows
-during `execute` and since `libpq` supports that it would be much better to
-implement that than to implement this.  However, I don't really know C and I'm
-not really sure I want to spend time learning it over another language.
+This module would be unnecessary if [DBD::Pg](https://metacpan.org/pod/DBD::Pg) did not fetch all rows during
+`execute` and since `libpq` supports that it would be much better to fix
+`fetch*` than to implement this.  However, I am not able to do so at this
+time.
 
 # CONTRIBUTING
 
@@ -79,4 +69,5 @@ Nathaniel Nutter `nnutter@cpan.org`
 
 # SEE ALSO
 
-[DBD::Pg](https://metacpan.org/pod/DBD::Pg), [Mojo::Pg](https://metacpan.org/pod/Mojo::Pg)
+[DBD::Pg](https://metacpan.org/pod/DBD::Pg), [Mojo::Pg](https://metacpan.org/pod/Mojo::Pg), [Mojo::PgX::Cursor::Cursor](https://metacpan.org/pod/Mojo::PgX::Cursor::Cursor),
+[Mojo::PgX::Cursor::Database](https://metacpan.org/pod/Mojo::PgX::Cursor::Database), [Mojo::PgX::Cursor::Results](https://metacpan.org/pod/Mojo::PgX::Cursor::Results)

@@ -35,17 +35,21 @@ Subclass of L<Mojo::Pg::Database>.  Adds the C<cursor> method.
     my $results = $db->cursor('select * from foo');
     my $results = $db->cursor('select * from foo where id >= (?)', 10);
 
-Execute a blocking statement and return an L<Mojo::PgX::Cursor::Results> object
-to iterate over the results.  Unlike L<Mojo::Pg::Results> results are fetched
-in batches rather than all at once but this is handled automatically by the
-L<Mojo::PgX::Cursor::Results> object.  Be aware that this makes the object
-behave somewhat differently.
+Create a PostgreSQL cursor and return an L<Mojo::PgX::Cursor::Results> object.
 
-L<Mojo::PgX::Cursor::Results> does not support C<hashes> or C<arrays> since if
-you wish to use those you should just use C<query> instead.  C<rows> returns
-the number of rows in the batch not the total rows for the query.
+=head1 LICENSE
 
-L<Mojo::PgX::Cursor::Results> should behave like L<Mojo::Pg::Results> for
-C<array>, C<columns>, C<hash>, and C<expand>.
+Copyright (C) Nathaniel Nutter.
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=head1 AUTHOR
+
+Nathaniel Nutter C<nnutter@cpan.org>
+
+=head1 SEE ALSO
+
+L<Mojo::PgX::Cursor>, L<Mojo::PgX::Cursor::Cursor>, L<Mojo::PgX::Cursor::Results>
 
 =cut
