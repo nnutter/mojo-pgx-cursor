@@ -57,8 +57,8 @@ time.
 # CONTRIBUTING
 
 If you would like to submit bug reports, feature requests, questions, etc. you
-should create an issue on the <GitHub Issue
-Tracker|https://github.com/nnutter/mojo-pgx-cursor/issues> for this module.
+should create an issue on the [GitHub Issue
+Tracker](https://github.com/nnutter/mojo-pgx-cursor/issues) for this module.
 
 # REFERENCES
 

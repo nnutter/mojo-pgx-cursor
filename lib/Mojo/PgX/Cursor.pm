@@ -74,7 +74,7 @@ time.
 =head1 CONTRIBUTING
 
 If you would like to submit bug reports, feature requests, questions, etc. you
-should create an issue on the <GitHub Issue
+should create an issue on the L<GitHub Issue
 Tracker|https://github.com/nnutter/mojo-pgx-cursor/issues> for this module.
 
 =head1 REFERENCES
