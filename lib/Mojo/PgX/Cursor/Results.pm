@@ -98,20 +98,17 @@ __END__
 
 Mojo::PgX::Cursor::Results
 
-=head1 SYNOPSIS
-
 =head1 DESCRIPTION
 
 L<Mojo::PgX::Cursor::Results> is a container for a L<Mojo::PgX::Cursor::Cursor>
 like L<Mojo::Pg::Results> is for a statement handle.  Therefore it tries to
 mimic the API of L<Mojo::Pg::Results> whereever it makes sense to do do.
 
-L<Mojo::PgX::Cursor::Results> should behave like L<Mojo::Pg::Results> for
-C<array>, C<columns>, C<hash>, and C<expand>.
-
-L<Mojo::PgX::Cursor::Results> does not support C<hashes> or C<arrays> since if
-you wish to use those you should just use C<query> instead.  Also note, C<rows>
-returns the number of rows in the current iteration not the total rows for the query.
+This container should behave like L<Mojo::Pg::Results> for C<array>,
+C<columns>, C<hash>, and C<expand>.  It intentionally does not support
+C<hashes> or C<arrays> since if you wish to use those you should just use
+C<query> instead.  One difference in behavior is C<rows> returns the number of
+rows in the current iteration not the total rows for the query.
 
 =head1 ATTRIBUTES
 

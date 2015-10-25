@@ -22,7 +22,6 @@ Mojo::PgX::Cursor - Cursor Extension for Mojo::Pg
 
 =head1 SYNOPSIS
 
-    require Mojo::PgX::Cursor;
     my $pg = Mojo::PgX::Cursor->new('postgresql://postgres@/test');
     my $results = $pg->db->cursor('select * from some_big_table');
     while (my $next = $results->hash) {
@@ -32,7 +31,7 @@ Mojo::PgX::Cursor - Cursor Extension for Mojo::Pg
 =head1 DESCRIPTION
 
 L<DBD::Pg> fetches all rows when a statement is executed whereas other drivers
-usually fetch rows using the C<fetch*> methods.  C<Mojo::PgX::Cursor> is an
+usually fetch rows using the C<fetch*> methods.  Mojo::PgX::Cursor is an
 extension to work around this issue using PostgreSQL cursors while providing a
 L<Mojo::Pg>-style API for iteratoring over the results; see
 L<Mojo::PgX::Cursor::Results> for details.

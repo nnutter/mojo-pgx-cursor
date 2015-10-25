@@ -51,8 +51,6 @@ __END__
 
 Mojo::PgX::Cursor::Cursor
 
-=head1 SYNOPSIS
-
 =head1 DESCRIPTION
 
 L<Mojo::PgX::Cursor::Cursor> is a scope guard for L<DBD::Pg> cursors.
