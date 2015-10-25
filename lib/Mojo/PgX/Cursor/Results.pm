@@ -7,7 +7,7 @@ use Time::HiRes qw(time);
 
 use Mojo::Base -base;
 
-has [qw(seconds_blocked fetch)];
+has [qw(seconds_blocked fetch_count)];
 
 sub array {
   my $self = shift->_fetch;
@@ -73,7 +73,7 @@ sub _load_next {
   my $self = shift;
   $self->{delay} = Mojo::IOLoop->delay(
     sub {
-      $self->cursor->fetch($self->{fetch}, shift->begin);
+      $self->cursor->fetch($self->{fetch_count}, shift->begin);
     },
     sub {
       $self->{next} = $_[2];
@@ -122,9 +122,9 @@ returns the number of rows in the current iteration not the total rows for the q
 
 The L<Mojo::PgX::Cursor::Cursor> rows are fetched from.
 
-=head2 fetch
+=head2 fetch_count
 
-    $results->fetch(10);
+    $results->fetch_count(10);
 
 The quantity of rows to fetch in each iteration.  Since the next iteration is
 always pre-fetched up to twice this many rows will be in memory at any given
