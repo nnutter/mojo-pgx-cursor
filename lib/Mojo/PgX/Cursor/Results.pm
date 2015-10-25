@@ -33,12 +33,6 @@ sub cursor {
   return $self->{cursor};
 }
 
-sub hash {
-  my $self = shift->_fetch;
-  $self->{remaining}--;
-  return $self->{results}->hash;
-}
-
 sub expand {
   my $self = shift;
   $self->{expand}++;
@@ -46,6 +40,12 @@ sub expand {
       $self->{results}->expand;
   }
   return $self;
+}
+
+sub hash {
+  my $self = shift->_fetch;
+  $self->{remaining}--;
+  return $self->{results}->hash;
 }
 
 sub new {
