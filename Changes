@@ -2,6 +2,8 @@ Revision history for Perl extension Mojo-PgX-Cursor
 
 {{$NEXT}}
 
+0.501000 2015-10-25T03:27:57Z
+
     - Rename `fetch` attribute on Mojo::PgX::Cursor::Results to `fetch_count`.
     - Documentation improvements.
 
