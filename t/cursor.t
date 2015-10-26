@@ -124,6 +124,16 @@ $db->query('insert into cursor_test (name) values (?)', $_) for qw(foo bar);
   ok $results->rows, 'fetched some';
 }
 
+{
+  my $cursor = Mojo::PgX::Cursor::Cursor->new(
+    db => $pg->db,
+    query => 'select name from cursor_test',
+  );
+  isnt $cursor->db, $db;
+  $cursor->db(undef);
+  is $cursor->db, undef;
+}
+
 $db->query('drop table cursor_test');
 
 done_testing();
