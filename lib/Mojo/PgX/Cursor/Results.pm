@@ -95,9 +95,9 @@ sub _load_next {
 }
 
 sub _results {
-    my $self = shift;
-    return $self->{results} if $self->{results};
-    return $self->_fetch->{results};
+  my $self = shift;
+  return $self->{results} if $self->{results};
+  return $self->_fetch->{results};
 }
 
 1;
