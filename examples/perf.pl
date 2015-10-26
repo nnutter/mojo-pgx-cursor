@@ -45,4 +45,5 @@ for my $rows (reverse (1, 10, 100, 1000, 10000)) {
   my $elapsed = time - $start;
   say sprintf 'Blocked for %6.3f seconds (%4.1f%%) with rows = %5d',
     $cursor->seconds_blocked, ($cursor->seconds_blocked / $elapsed * 100), $rows;
+  $cursor->wait;
 }
