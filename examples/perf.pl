@@ -35,14 +35,14 @@ unless ($results) {
 }
 
 use Time::HiRes qw(nanosleep time);
-for my $fetch (reverse (1, 10, 100, 1000, 10000)) {
+for my $rows (reverse (1, 10, 100, 1000, 10000)) {
   my $start = time;
   my $cursor = $db->cursor('select * from perf_test limit 100000');
-  $cursor->fetch($fetch);
+  $cursor->rows($rows);
   while (my $row = $cursor->hash) {
     nanosleep 10;
   }
   my $elapsed = time - $start;
-  say sprintf 'Blocked for %6.3f seconds (%4.1f%%) with fetch = %5d',
-    $cursor->seconds_blocked, ($cursor->seconds_blocked / $elapsed * 100), $cursor->fetch;
+  say sprintf 'Blocked for %6.3f seconds (%4.1f%%) with rows = %5d',
+    $cursor->seconds_blocked, ($cursor->seconds_blocked / $elapsed * 100), $rows;
 }
