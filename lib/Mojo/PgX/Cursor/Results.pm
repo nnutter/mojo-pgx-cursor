@@ -7,7 +7,7 @@ use Time::HiRes qw(time);
 
 use Mojo::Base -base;
 
-has [qw(seconds_blocked fetch_count)];
+has [qw(seconds_blocked)];
 
 sub array {
   my $self = shift->_fetch;
@@ -53,7 +53,12 @@ sub new {
   return $self->_load_next;
 }
 
-sub rows { shift->_results->rows }
+sub rows {
+  my $self = shift;
+  return $self->_results->rows unless @_;
+  $self->{rows} = shift;
+  return $self;
+}
 
 sub _fetch {
   my $self = shift;
@@ -73,7 +78,7 @@ sub _load_next {
   my $self = shift;
   $self->{delay} = Mojo::IOLoop->delay(
     sub {
-      $self->cursor->fetch($self->{fetch_count}, shift->begin);
+      $self->cursor->fetch($self->{rows}, shift->begin);
     },
     sub {
       $self->{next} = $_[2];
@@ -119,17 +124,6 @@ rows in the current iteration not the total rows for the query.
 
 The L<Mojo::PgX::Cursor::Cursor> rows are fetched from.
 
-=head2 fetch_count
-
-    $results->fetch_count(10);
-
-The quantity of rows to fetch in each iteration.  Since the next iteration is
-always pre-fetched up to twice this many rows will be in memory at any given
-time.  Set this to optimize for time or memory in your
-specific use case.
-
-Defaults to 100.
-
 =head2 seconds_blocked
 
     my $time_wasted = $results->seconds_blocked;
@@ -173,6 +167,14 @@ Construct a new L<Mojo::PgX::Cursor::Results> object.
     my $num = $results->rows;
 
 Number of rows in current iteration; not the total for the original query.
+
+    $results->rows(1000);
+
+Set the number of rows to fetch in each iteration.  Since the next iteration is
+always pre-fetched up to twice this many rows will be in memory at any given
+time.  Set this to optimize for time or memory in your specific use case.
+
+If not set then the L<Mojo::PgX::Cursor::Cursor> default fetch size is used.
 
 =head1 LICENSE
 

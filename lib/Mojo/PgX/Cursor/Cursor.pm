@@ -94,7 +94,7 @@ Close the cursor.
     my $results = $cursor->fetch;
     my $results = $cursor->fetch(10);
 
-Fetch rows from the cursor.
+Fetch rows from the cursor.  Defaults to fetching 100 rows.
 
 =head2 new
 

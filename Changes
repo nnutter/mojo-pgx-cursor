@@ -2,6 +2,9 @@ Revision history for Perl extension Mojo-PgX-Cursor
 
 {{$NEXT}}
 
+    - Remove `fetch_count` attribute on Mojo::PgX::Cursor::Results in favor of
+      overloading `rows` to set the fetch count.
+
 0.501000 2015-10-25T03:27:57Z
 
     - Rename `fetch` attribute on Mojo::PgX::Cursor::Results to `fetch_count`.
@@ -41,4 +44,3 @@ Revision history for Perl extension Mojo-PgX-Cursor
 0.01 2015-10-23T02:15:50Z
 
     - original version
-
