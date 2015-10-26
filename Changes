@@ -2,6 +2,7 @@ Revision history for Perl extension Mojo-PgX-Cursor
 
 {{$NEXT}}
 
+    - Add `wait` method on Mojo::PgX::Cursor::Results.
     - Remove `fetch_count` attribute on Mojo::PgX::Cursor::Results in favor of
       overloading `rows` to set the fetch count.
 

@@ -20,9 +20,7 @@ sub columns { shift->_results->columns }
 sub cursor {
   my $self = shift;
   if (@_) {
-    if ($self->{delay}) {
-        $self->{delay}->wait;
-    }
+    $self->wait;
     $self->{cursor} = shift;
     $self->{remaining} = 0;
     delete $self->{delay};
@@ -60,12 +58,20 @@ sub rows {
   return $self;
 }
 
+sub wait {
+  my $self = shift;
+  if ($self->{delay}) {
+    $self->{delay}->wait;
+  }
+  return $self;
+}
+
 sub _fetch {
   my $self = shift;
   return $self if $self->{remaining};
   unless ($self->{next}) {
     my $start = time;
-    $self->{delay}->wait;
+    $self->wait;
     $self->{seconds_blocked} += time - $start;
     delete $self->{delay};
   }
@@ -175,6 +181,13 @@ always pre-fetched up to twice this many rows will be in memory at any given
 time.  Set this to optimize for time or memory in your specific use case.
 
 If not set then the L<Mojo::PgX::Cursor::Cursor> default fetch size is used.
+
+=head2 wait
+
+  $results->wait;
+
+Wait for background query to finish.  This would be used to block before making
+another background query on the same database handle.
 
 =head1 LICENSE
 
