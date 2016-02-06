@@ -2,6 +2,9 @@ Revision history for Perl extension Mojo-PgX-Cursor
 
 {{$NEXT}}
 
+    - Fix "circular reference" that prevented proper destruction of
+      Mojo::PgX::Cursor cursors.  See `t/scope-destroy-example.t`.
+
 0.502000 2015-10-26T02:44:54Z
 
     - Add `wait` method on Mojo::PgX::Cursor::Results.
