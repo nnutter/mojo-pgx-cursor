@@ -3,6 +3,7 @@ package Mojo::PgX::Cursor::Results;
 require Mojo::IOLoop;
 require Mojo::PgX::Cursor::Cursor;
 
+use Scalar::Util qw(weaken);
 use Time::HiRes qw(time);
 
 use Mojo::Base -base;
@@ -82,13 +83,21 @@ sub _fetch {
 
 sub _load_next {
   my $self = shift;
+  my $cursor = $self->cursor;
+  weaken($cursor);
+  my $results = $self;
+  weaken($results);
   $self->{delay} = Mojo::IOLoop->delay(
     sub {
-      $self->cursor->fetch($self->{rows}, shift->begin);
+      if ($cursor && $results) {
+        $cursor->fetch($results->{rows}, shift->begin);
+      }
     },
     sub {
-      $self->{next} = $_[2];
-      $self->{next}->expand if ($self->{expand});
+      if ($results) {
+        $results->{next} = $_[2];
+        $results->{next}->expand if ($results->{expand});
+      }
     },
   );
   return $self;
