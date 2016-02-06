@@ -4,7 +4,7 @@ require Mojo::PgX::Cursor::Database;
 
 use Mojo::Base 'Mojo::Pg';
 
-our $VERSION = "0.502000";
+our $VERSION = "0.502001";
 
 sub db {
     my $db = shift->SUPER::db(@_);

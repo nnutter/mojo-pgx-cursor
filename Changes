@@ -2,6 +2,8 @@ Revision history for Perl extension Mojo-PgX-Cursor
 
 {{$NEXT}}
 
+0.502001 2016-02-06T18:52:14Z
+
     - Fix "circular reference" that prevented proper destruction of
       Mojo::PgX::Cursor cursors.  See `t/scope-destroy-example.t`.
 
