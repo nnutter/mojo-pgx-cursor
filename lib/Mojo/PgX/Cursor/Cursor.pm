@@ -9,6 +9,7 @@ has [qw(bind db name query)];
 sub DESTROY {
   my $self = shift;
   if ($self->{close} && $self->db && $self->db->ping) { $self->close }
+  return 1;
 }
 
 sub close {
